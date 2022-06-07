@@ -1,5 +1,5 @@
 using Flux
-using JLD
+using JLD2
 
 X = load("./data/board_200_2000.jld")["xs"]
 y = load("./data/move_200_2000.jld", "ys")["ys"]

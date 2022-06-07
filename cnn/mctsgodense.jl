@@ -1,13 +1,15 @@
 using Flux
-using JLD
+using JLD2
 
 print(pwd())
 
+# Strange paths
 X = load("./data/board.jld")["xs"]
 y = load("./data/move.jld")["ys"]
 
 samples = size(X)[1]
 boardsize = 9
+# reshape does not work
 X = reshape(X, (boardsize, length(X/boardsize)))
 Y = reshape(y, (boardsize, length(X/boardsize)))
 

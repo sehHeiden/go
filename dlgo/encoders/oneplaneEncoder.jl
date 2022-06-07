@@ -4,7 +4,7 @@ include("../goboard.jl")
 struct OnePlaneEncoder{}
     boardwith::UInt8
     boardheith::UInt8
-    num_planes::UInt
+    numplanes::UInt
     name::String
 end
 
@@ -16,7 +16,7 @@ function name(oplenc::OnePlaneEncoder)
 end
 
 function encode(oplenc::OnePlaneEncoder, gs::GameState)
-    boadmatrix = zeros(shape(oplenc))
+    boadmatrix = zeros(Int8, shape(oplenc))
     nextplayer = gs.nextplayer
     for r in 1:oplenc.boardheith
         for c in 1:oplenc.boardwith
@@ -52,6 +52,6 @@ function numpoints(oplenc::OnePlaneEncoder)
 end
 
 function shape(oplenc::OnePlaneEncoder)
-    return oplenc.num_planes, oplenc.boardheith, oplenc.boardwith
+    return oplenc.numplanes, oplenc.boardheith, oplenc.boardwith
 end
 

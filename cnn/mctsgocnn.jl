@@ -1,27 +1,29 @@
 using Flux
 using JLD2
 
-X = load("./data/board_200_2000.jld")["xs"]
-y = load("./data/move_200_2000.jld", "ys")["ys"]
+X = load("./data/board_400_5000.jld")["xs"]
+y = load("./data/move_400_5000.jld")["ys"]
 
 samples = size(X)[1]
-size = 9
-inputshape = (shape, shape, 1)
+boardsize = 9
+inputshape = (boardsize, boardsize, 1)
 trainsamples = convert(Int, 0.9 * samples)
 
 X_train, X_test = X[1: trainsamples], X[trainsamples:length(X)]
-y_train, y_test = y[1: trainsamples], y[trainsamples:length(X)]
-data = DataLoader((X_train, y_train), batchsize=128)
+y_train, y_test = y[1: trainsamples], y[trainsamples:length(y)]
+data = Flux.DataLoader((X_train, y_train), batchsize=128)
 
-model = Chain(Conv((3,3), inputshape => 48, relu; pad = SamePad()),
-              DropOut(0.5), 
-              Conv((3,3), 48 => 48, relu; pad = SamePad()),
-              MaxPool((2,2)), 
-              DropOut(0.51,
-              Flux.flatten(),
-              Dense(48 => 512, relu),
-              DropOut(0.5),
-              Dense(512 => size*size, softmax))
+model = Chain(
+    Conv((3,3), 1 => 48, relu; pad = SamePad()),
+    Dropout(0.5), 
+    Conv((3,3), 48 => 48, relu; pad = SamePad()),
+    MaxPool((2,2)), 
+    Dropout(0.5),
+    Flux.flatten,
+    Dense(48 => 512, relu),
+    Dropout(0.5),
+    Dense(512 => boardsize*boardsize, softmax)
+    )
 
 loss(x, y) = Flux.Losses.logitcrossentropy(model(x), y)
 ps = Flux.params(model)

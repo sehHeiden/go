@@ -4,19 +4,18 @@ using JLD2
 print(pwd())
 
 # Strange paths
-X = load("./data/board.jld")["xs"]
-y = load("./data/move.jld")["ys"]
+X = load("./data/board_400_5000.jld")["xs"]
+y = load("./data/move_400_5000.jld")["ys"]
 
 samples = size(X)[1]
 boardsize = 9
-# reshape does not work
-X = reshape(X, (boardsize, length(X/boardsize)))
-Y = reshape(y, (boardsize, length(X/boardsize)))
+X = Flux.flatten(X)
+Y = Flux.flatten(y)
 
 trainsamples = convert(Int, 0.9 * samples)
 
-X_train, X_test = X[1:trainsamples], X[trainsamples:length(x)]
-Y_train, Y_test = X[1:trainsamples], X[trainsamples:length(x)]
+X_train, X_test = X[1:trainsamples], X[trainsamples:length(X)]
+Y_train, Y_test = y[1:trainsamples], y[trainsamples:length(y)]
 
 model = Chain(Dense(boardsize => 1000, relu),
               Dense(1000=>500, relu),

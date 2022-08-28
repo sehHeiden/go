@@ -1,8 +1,8 @@
 using Flux
 using JLD2
 
-X = load("./data/board_400_5000.jld")["xs"]
-y = load("./data/move_400_5000.jld")["ys"]
+X = load("../data/board_400_5000.jld")["xs"]
+y = load("../data/move_400_5000.jld")["ys"]  
 
 samples = size(X)[1]
 boardsize = 9
@@ -14,7 +14,7 @@ y_train, y_test = y[1: trainsamples], y[trainsamples:length(y)]
 data = Flux.DataLoader((X_train, y_train), batchsize=128)
 
 model = Chain(
-    Conv((3,3), 1 => 48, relu; pad = SamePad()),
+    Conv((3,3), 3 => 48, relu; pad = SamePad()),
     Dropout(0.5), 
     Conv((3,3), 48 => 48, relu; pad = SamePad()),
     MaxPool((2,2)), 

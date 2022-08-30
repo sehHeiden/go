@@ -2,15 +2,20 @@ using Flux
 using JLD2
 
 X = load("./data/board_400_5000.jld")["xs"]
-y = load("./data/move_400_5000.jld")["ys"]  
+y = load("./data/move_400_5000.jld")["ys"]
 
-samples = size(X)[1]
+X2 = reduce(hcat, [x for X2 in X for x in X2])
+y2 = reduce(hcat, [yyy for yy in y for yyy in yy])
+
+
+
+samples = size(X2)[1]
 boardsize = 9
 inputshape = (boardsize, boardsize, 1)
-trainsamples = convert(Int, 0.9 * samples)
+trainsamples = convert(Int, floor(0.9 * samples))
 
-X_train, X_test = X[1: trainsamples], X[trainsamples:length(X)]
-y_train, y_test = y[1: trainsamples], y[trainsamples:length(y)]
+X_train, X_test = X2[1: trainsamples], X2[trainsamples:length(X)]
+y_train, y_test = y2[1: trainsamples], y2[trainsamples:length(y)]
 data = Flux.DataLoader((X_train, y_train); batchsize=128)
 
 model = Chain(
